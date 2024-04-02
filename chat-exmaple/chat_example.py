@@ -55,7 +55,9 @@ def create_chat_funtion(kernel: sk.Kernel):
 
 async def chat(kernel: sk.Kernel, history: ChatHistory):
     question = input("user: ")
-    history.add_user_message(question)
+    if "exit" in question or "quit" in question or "done" in question:
+        return "exit"
+    history.add_user_message(question) 
     arguments = KernelArguments(user_input=question, history=history)
     response = await kernel.invoke(chat_function, arguments)
     print(f"ChatBot: {response}")
@@ -70,6 +72,8 @@ if __name__ == "__main__":
 
     chat_enable = True 
     while chat_enable:
-        asyncio.run(chat(kernel, history))
+        res = asyncio.run(chat(kernel, history))
+        if res == "exit":
+            chat_enable = False
     
 
